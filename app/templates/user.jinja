@@ -1,0 +1,13 @@
+{% extends "base.jinja" %}
+{% block content %}
+    <h1>Characters</h1>
+
+    {% for i in characters  %}
+    <ol>
+    <li>
+        {{ i.name }}
+    </li>
+    </ol>
+    {% endfor %}
+
+{% endblock %}

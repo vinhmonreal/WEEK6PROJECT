@@ -1,0 +1,27 @@
+{% extends "base.jinja" %}
+{% block content %}
+   <h1>Add Marvel Character To Your Collection</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}<br>
+
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(size=32) }}<br>
+
+        </p>
+        <p>
+            {{ form.comics_appeared_in.label }}<br>
+            {{ form.comics_appeared_in(size=32) }}<br>
+
+        </p>
+        <p>
+            {{ form.super_power.label }}<br>
+            {{ form.super_power(size=32) }}<br>
+
+        </p>
+        <p>{{ form.submit() }}</p>
+{% endblock %}
