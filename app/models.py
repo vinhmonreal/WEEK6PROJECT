@@ -74,3 +74,33 @@ class MarvelCharacter(db.Model):
         return data
     
    
+class AddDrinks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    strDrink = db.Column(db.String(100), nullable = False)
+    strDrinkThumb = db.Column(db.String(500), nullable = False)
+    idDrink = db.Column(db.String(5), nullable = False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    owner_id = db.Column(db.String, db.ForeignKey('user.token'), nullable=False)
+    
+    def __repr__(self):
+        return f"AddDrink('{self.strDrink}', '{self.strDrinkThumb}', '{self.idDrink}', '{self.date_created}')"
+    
+    def commit(self):
+        db.session.add(self)
+        db.session.commit()
+        
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'strDrink': self.strDrink,
+            'strDrinkThumb': self.strDrinkThumb,
+            'idDrink': self.idDrink,
+            'date_created': self.date_created,
+            'owner_id': self.owner_id
+            
+        }
+        return data

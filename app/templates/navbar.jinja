@@ -23,7 +23,9 @@
           {% else %}
             <a class="dropdown-item" href="{{url_for('social.addcharacter')}}">Add Character</a>
             <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{url_for('auth.logout')}}">Logout</a>
+            <a class="dropdown-item" href="{{url_for('social.adddrink')}}">Add Drink</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{url_for('auth.logout')}}">Logout</a>
           </div>
           {% endif %}
         </li>

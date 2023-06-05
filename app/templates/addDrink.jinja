@@ -1,0 +1,21 @@
+{% extends "base.jinja" %}
+{% block content %}
+   <h1>Add Drinks to your Fav</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.idDrink.label }}<br>
+            {{ form.idDrink(size=32) }}<br>
+        </p>
+        <p>
+            {{ form.strDrink.label }}<br>
+            {{ form.strDrink(size=32) }}<br>
+
+        </p>
+        <p>
+            {{ form.strDrinkThumb.label }}<br>
+            {{ form.strDrinkThumb(size=32) }}<br>
+        </p>
+      
+        <p>{{ form.submit() }}</p>
+{% endblock %}

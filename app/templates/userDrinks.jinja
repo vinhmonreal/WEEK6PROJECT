@@ -1,0 +1,15 @@
+{% extends "base.jinja" %}
+{% block content %}
+    <h1>Fav Drinks</h1>
+
+    {% for i in drinks  %}
+    <ol>
+    <li>
+        {{ i.idDrink }} <br>
+        {{ i.strDrink }} <br>
+        {{ i.strDrinkThumb }} <br>
+    </li>
+    </ol>
+    {% endfor %}
+
+{% endblock %}

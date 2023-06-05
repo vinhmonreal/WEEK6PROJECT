@@ -22,3 +22,10 @@ class AddMarvelCharacterForm(FlaskForm):
     comics_appeared_in = StringField('Comics Appeared In', validators=[DataRequired()])
     super_power = StringField('Super Power', validators=[DataRequired()])
     submit = SubmitField ('Add')
+    
+class AddDrinkForm(FlaskForm):
+    idDrink = StringField('Drink ID', validators=[DataRequired()])
+    strDrink = StringField('Drink Name', validators=[DataRequired()])
+    strDrinkThumb = StringField('Drink Image', validators=[DataRequired()])
+    submit = SubmitField ('Add')
+    
