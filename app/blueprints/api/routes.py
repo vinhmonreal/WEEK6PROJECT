@@ -49,7 +49,7 @@ def verifyUser():
         return jsonify(user.to_dict()), 201
     else:
         return jsonify({'error': 'user not found or invalid password'}), 404
-    
+    # comtents = request.get_json()
 @bp.route('/user/favdrinks', methods=[ 'GET', 'POST'])
 def getuserDrinks():
     content = request.get_json()
@@ -62,34 +62,44 @@ def getuserDrinks():
         return jsonify({'error': 'user not found'}), 404
     
 
-@bp.route('/user/addfavdrinks', methods=['POST', 'GET'])
+@bp.route('/user/adddrink/<username>', methods=['POST', 'GET'])
 # @token_required
-def addfavdrinks():
+def addfavdrinks(username):
     content = request.get_json()
     token = content['token']
     idDrink = content['idDrink']
     strDrink = content['strDrink']
     strDrinkThumb = content['strDrinkThumb']
     
-    user = User.query.filter_by(token=token).first()
+    user = User.query.filter_by(username=username).first()
     if user:
-        drink = AddDrinks(idDrink=idDrink, strDrink=strDrink, strDrinkThumb=strDrinkThumb, owner_id=user.token)
-        drink.commit()
-        return jsonify(drink.to_dict()), 201
+        if user.token == token:
+            drink = AddDrinks(idDrink=idDrink, strDrink=strDrink, strDrinkThumb=strDrinkThumb, owner_id=token)
+            drink.commit()
+            return jsonify(drink.to_dict()), 201
+        else:
+            return jsonify({'error': 'user not found'}), 404
     else:
         return jsonify({'error': 'user not found'}), 404
     
-@bp.route('/user/removefavdrinks', methods=['POST', 'GET'])
+    
+@bp.route('/user/removedrink/<username>', methods=['POST', 'GET'])
 # @token_required
-def deletefavdrinks():
+def deletefavdrinks(username):
     content = request.get_json()
     token = content['token']
     idDrink = content['idDrink']
-    user = User.query.filter_by(token=token).first()
+    user = User.query.filter_by(username=username).first()
     if user:
-        drink_to_remove = AddDrinks.query.filter_by(idDrink=idDrink).first()
-        drink_to_remove.delete()
-        return jsonify("success"), 201
+        if user.token == token:
+            drink = AddDrinks.query.filter_by(idDrink=idDrink, owner_id=token).first()
+            if drink:
+                drink.delete()
+                return jsonify({'message': 'drink deleted'}), 201
+            else:
+                return jsonify({'error': 'drink not found'}), 404
+        else:
+            return jsonify({'error': 'user not found'}), 404
     else:
         return jsonify({'error': 'user not found'}), 404
     
@@ -107,6 +117,7 @@ def register():
         return jsonify({'error': 'email already exists'}), 409
     user = User(username=username, email=email)
     user.hash_password(password)
+    user.add_token()
     user.commit()
     return jsonify(user.to_dict()), 201
 
