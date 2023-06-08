@@ -4,6 +4,7 @@ from app.blueprints.api.helpers import token_required
 from app.models import AddDrinks, User, MarvelCharacter
 from flask import jsonify, request, url_for, abort
 from flask_cors import cross_origin
+
 @bp.get('/characters')
 # @token_required
 def characters():
@@ -38,20 +39,25 @@ def addcharacter():
     else:
         return jsonify({'error': 'user not found or invalid password'}), 404
     
+    
 @bp.route('/verifyuser', methods=['POST', 'GET'])
 def verifyUser():
+    
     content = request.get_json()
     username= content['username']
     password= content['password']
     
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
-        return jsonify(user.to_dict()), 201
+        return jsonify(user.to_dict())
     else:
         return jsonify({'error': 'user not found or invalid password'}), 404
     # comtents = request.get_json()
+    
+    
 @bp.route('/user/favdrinks', methods=[ 'GET', 'POST'])
 def getuserDrinks():
+    
     content = request.get_json()
     token = content['token']
     user = User.query.filter_by(token=token).first()
@@ -65,6 +71,7 @@ def getuserDrinks():
 @bp.route('/user/adddrink/<username>', methods=['POST', 'GET'])
 # @token_required
 def addfavdrinks(username):
+    
     content = request.get_json()
     token = content['token']
     idDrink = content['idDrink']
@@ -86,10 +93,12 @@ def addfavdrinks(username):
 @bp.route('/user/removedrink/<username>', methods=['POST', 'GET'])
 # @token_required
 def deletefavdrinks(username):
+    
     content = request.get_json()
     token = content['token']
     idDrink = content['idDrink']
     user = User.query.filter_by(username=username).first()
+    
     if user:
         if user.token == token:
             drink = AddDrinks.query.filter_by(idDrink=idDrink, owner_id=token).first()
@@ -107,17 +116,24 @@ def deletefavdrinks(username):
 
 @bp.route('/auth/register', methods=['POST', 'GET'])
 def register():
+    
     content = request.get_json()
     username= content['username']
     password= content['password']
     email = content['email']
-    if User.query.filter_by(username=username).first():
-        return jsonify({'error': 'username already exists'}), 409
-    if User.query.filter_by(email=email).first():
-        return jsonify({'error': 'email already exists'}), 409
-    user = User(username=username, email=email)
-    user.hash_password(password)
-    user.add_token()
-    user.commit()
-    return jsonify(user.to_dict()), 201
+    
+    try:
+        int(username)
+        return jsonify({'error': 'username must be a string'}), 408
+    except:
+        
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'username already exists'}), 409
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'email already exists'}), 409
+        user = User(username=username, email=email)
+        user.hash_password(password)
+        user.add_token()
+        user.commit()
+        return jsonify(user.to_dict()), 201
 
